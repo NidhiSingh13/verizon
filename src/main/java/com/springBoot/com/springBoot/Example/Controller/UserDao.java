@@ -2,6 +2,7 @@ package com.springBoot.com.springBoot.Example.Controller;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.stereotype.Component;
@@ -71,6 +72,20 @@ public class UserDao<UserController> {
 			}
 		}
 		return null;
+	}
+	public UserContoller deletebyId(int id) {
+		// TODO Auto-generated method stub
+		Iterator<UserContoller> itr = user.iterator();
+		while(itr.hasNext()) {
+			UserContoller user = itr.next();
+			if(user.getId()==id) {
+				itr.remove();
+				return user;
+			}
+			
+		}
+		return null;
+		
 	}
 
 }

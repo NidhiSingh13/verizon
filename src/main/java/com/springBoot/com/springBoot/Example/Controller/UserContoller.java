@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.validation.constraints.Past;
+import javax.validation.constraints.Size;
+
 
 
 
@@ -11,7 +14,11 @@ import java.util.List;
 public class UserContoller {
 	
 	private Integer Id;
+	
+	
+	@Size(min=2,message="name should have more than 2 characters")
 	private String name;
+	@Past
 	private Date brithDate;
 	private List<Userpost> post = new ArrayList();
 	
@@ -33,7 +40,7 @@ public class UserContoller {
 		return name;
 	}
 	public void setName(String name) {
-		this.name = name;
+		this.name = name; 
 	}
 	public Date getBrithDate() {
 		return brithDate;

@@ -1,9 +1,13 @@
 package com.springBoot.com.springBoot.Example.Controller;
-
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.*;
 import java.net.URI;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.Resource;
+import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,16 +34,19 @@ public class UserMapping {
 	}
 	
 	@RequestMapping(method = RequestMethod.GET,path ="/users/{id}")
-	public UserContoller getUserById(@PathVariable int id) {
+	public Resource<UserContoller> getUserById(@PathVariable int id) {
 		UserContoller user =dao.findUserById(id);
 		if(user== null) {
 			throw new UserNotFountException("id->"+id);
 		}
-		return user;
+		Resource<UserContoller> resource = new Resource<UserContoller>(user);
+		ControllerLinkBuilder linkTo = linkTo(methodOn(this.getClass()).getAllUser());
+		resource.add(linkTo.withRel("ALL-USERS"));
+		return resource;
 	}
 	
 	@RequestMapping(method= RequestMethod.POST,path="/users")
-	public  ResponseEntity<Void> addUser(@RequestBody UserContoller u){
+	public  ResponseEntity<Void> addUser(@Valid @RequestBody UserContoller u){
 		UserContoller user = dao.save(u);
 		if(u.getName().matches(".*\\d+.")) {
 			throw new NumberFormatException("userName :"+ u.getName()+"not acceptable");
@@ -68,6 +75,14 @@ public class UserMapping {
 		 return post;
 	}
 	
+	@RequestMapping(method=RequestMethod.DELETE,path="users/{id}")
+	public UserContoller deleteById(@PathVariable int id) {
+		UserContoller user = dao.deletebyId(id);
+		if(user ==null) {
+			throw new UserNotFountException("userid:"+id);
+		}
+		return user;
+	}
 	
 	
 
